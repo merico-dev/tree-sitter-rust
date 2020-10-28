@@ -191,7 +191,7 @@ let size: f64 = len(values) as f64;
     value: (type_cast_expression
       value: (call_expression
         function: (identifier)
-        arguments: (arguments (identifier)))
+        arguments: (arguments argument: (identifier)))
       type: (primitive_type))))
 
 ============================================
@@ -213,10 +213,10 @@ add(
     arguments: (arguments))
   (call_expression
     function: (identifier)
-    arguments: (arguments (integer_literal) (integer_literal)))
+    arguments: (arguments argument: (integer_literal) argument: (integer_literal)))
   (call_expression
     function: (identifier)
-    arguments: (arguments (integer_literal) (integer_literal))))
+    arguments: (arguments argument: (integer_literal) argument: (integer_literal))))
 
 ============================================
 Array expressions
@@ -450,7 +450,7 @@ let msg = match x {
             (integer_literal)))
         value: (string_literal))
       (match_arm
-        pattern: (match_pattern)
+        pattern: (match_pattern (wildcard))
         value: (string_literal))))
   (let_declaration
     pattern: (identifier)
@@ -483,7 +483,7 @@ let msg = match x {
             consequence: (block
               (string_literal))))
         (match_arm
-          pattern: (match_pattern)
+          pattern: (match_pattern (wildcard))
           value: (string_literal))))))
 
 ============================================

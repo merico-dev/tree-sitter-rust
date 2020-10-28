@@ -598,22 +598,24 @@ module.exports = grammar({
       '(',
       sepBy(',', seq(
         optional($.attribute_item),
-        choice(
+        field('parameter', choice(
           $.parameter,
           $.self_parameter,
           $.variadic_parameter,
-          '_',
+          $.wildcard,
           $._type
-        ))),
+        )))),
       optional(','),
       ')'
     ),
+
+    wildcard: $ => token('_'),
 
     self_parameter: $ => seq(
       optional('&'),
       optional($.lifetime),
       optional($.mutable_specifier),
-      $.self
+      field('pattern', $.self)
     ),
 
     variadic_parameter: $ => '...',
@@ -913,9 +915,9 @@ module.exports = grammar({
     ),
 
     range_expression: $ => prec.left(PREC.range, choice(
-      seq($._expression, choice('..', '...', '..='), $._expression),
-      seq($._expression, '..'),
-      seq('..', $._expression),
+      seq(field('start', $._expression), choice('..', '...', '..='), field('end', $._expression)),
+      seq(field('start', $._expression), '..'),
+      seq('..', field('end', $._expression)),
       '..'
     )),
 
@@ -950,7 +952,7 @@ module.exports = grammar({
 
       return choice(...table.map(([precedence, operator]) => prec.left(precedence, seq(
         field('left', $._expression),
-        field('operator', operator),
+        operator,
         field('right', $._expression),
       ))));
     },
@@ -963,7 +965,7 @@ module.exports = grammar({
 
     compound_assignment_expr: $ => prec.left(PREC.assign, seq(
       field('left', $._expression),
-      field('operator', choice('+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<=', '>>=')),
+      choice('+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<=', '>>='),
       field('right', $._expression)
     )),
 
@@ -985,7 +987,7 @@ module.exports = grammar({
 
     arguments: $ => seq(
       '(',
-      sepBy(',', seq(repeat($.attribute_item), $._expression)),
+      sepBy(',', seq(repeat($.attribute_item), field('argument', $._expression))),
       optional(','),
       ')'
     ),
@@ -1046,7 +1048,7 @@ module.exports = grammar({
 
     shorthand_field_initializer: $ => seq(
       repeat($.attribute_item),
-      $.identifier
+      field('identifier', $.identifier)
     ),
 
     field_initializer: $ => seq(
@@ -1183,11 +1185,11 @@ module.exports = grammar({
 
     loop_label: $ => seq('\'', $.identifier),
 
-    break_expression: $ => prec.left(seq('break', optional($.loop_label), optional($._expression))),
+    break_expression: $ => prec.left(seq('break', optional($.loop_label), field('expression', optional($._expression)))),
 
     continue_expression: $ => prec.left(seq('continue', optional($.loop_label))),
 
-    index_expression: $ => prec(PREC.call, seq($._expression, '[', $._expression, ']')),
+    index_expression: $ => prec(PREC.call, seq(field('subject', $._expression), '[', field('subscript', $._expression), ']')),
 
     await_expression: $ => prec(PREC.field, seq(
       $._expression,
@@ -1240,7 +1242,7 @@ module.exports = grammar({
       $.mut_pattern,
       $.range_pattern,
       $.or_pattern,
-      '_'
+      $.wildcard,
     ),
 
     tuple_pattern: $ => seq(
@@ -1402,11 +1404,6 @@ module.exports = grammar({
       )),
 
     boolean_literal: $ => choice('true', 'false'),
-
-    comment: $ => choice(
-      $.line_comment,
-      $.block_comment
-    ),
 
     line_comment: $ => token(seq(
       '//', /.*/
