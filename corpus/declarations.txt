@@ -80,10 +80,10 @@ fn accumulate(self) -> Machine<{State::Accumulate}> {}
   (function_item
     name: (identifier)
     parameters: (parameters
-      (parameter
+       parameter: (parameter
         pattern: (identifier)
         type: (primitive_type))
-      (parameter
+       parameter: (parameter
         pattern: (identifier)
         type: (primitive_type)))
     return_type: (primitive_type)
@@ -95,7 +95,7 @@ fn accumulate(self) -> Machine<{State::Accumulate}> {}
   (function_item
     name: (identifier)
     parameters: (parameters
-      (parameter
+       parameter: (parameter
         pattern: (identifier)
         type: (reference_type
           type: (primitive_type))))
@@ -135,7 +135,7 @@ fn accumulate(self) -> Machine<{State::Accumulate}> {}
   (function_item
     name: (identifier)
     parameters: (parameters
-      (parameter
+       parameter: (parameter
         pattern: (identifier)
         type: (abstract_type
           trait: (function_type
@@ -155,21 +155,21 @@ fn accumulate(self) -> Machine<{State::Accumulate}> {}
       (attribute_item
         (meta_item
           (identifier)))
-      (parameter
+       parameter: (parameter
         pattern: (identifier)
         type: (primitive_type))
       (attribute_item
         (meta_item
           (identifier)))
-      (parameter
+       parameter: (parameter
         pattern: (identifier)
         type: (primitive_type)))
     body: (block))
   (function_item
     name: (identifier)
     parameters: (parameters
-      (self_parameter
-        (self)))
+       parameter: (self_parameter
+        pattern: (self)))
     return_type: (generic_type
       type: (type_identifier)
       type_arguments: (type_arguments
@@ -558,16 +558,16 @@ pub fn uninit_array<const LEN: usize>() -> [Self; LEN] {}
             type_arguments: (type_arguments
               (type_identifier))))))
     parameters: (parameters
-      (self_parameter
+      parameter: (self_parameter
         (mutable_specifier)
-        (self))
-      (parameter
+        pattern: (self))
+      parameter: (parameter
         pattern: (identifier)
         type: (generic_type
           type: (type_identifier)
           type_arguments: (type_arguments
             (primitive_type))))
-      (parameter
+      parameter: (parameter
         pattern: (identifier)
         type: (type_identifier)))
     body: (block))
@@ -834,13 +834,13 @@ fn foo() {
       (call_expression
         function: (identifier)
         arguments: (arguments
-          (identifier)
+          argument: (identifier)
             (attribute_item (meta_item
               (identifier)
               arguments: (meta_arguments (meta_item
                 (identifier)
                 value: (string_literal)))))
-            (identifier)))
+            argument: (identifier)))
       (let_declaration
         pattern: (identifier)
         value: (array_expression
@@ -884,30 +884,30 @@ impl Machine<{State::Init}> {}
       (function_item
         name: (identifier)
         parameters: (parameters
-          (self_parameter
-            (self)))
+          parameter: (self_parameter
+            pattern: (self)))
         body: (block))
       (function_item
         name: (identifier)
         parameters: (parameters
-          (self_parameter
+          parameter: (self_parameter
             (mutable_specifier)
-            (self)))
+            pattern: (self)))
         body: (block))
       (function_item
         name: (identifier)
         parameters: (parameters
-          (self_parameter
-            (self)))
+          parameter: (self_parameter
+            pattern: (self)))
         body: (block))
       (function_item
         name: (identifier)
         parameters: (parameters
-          (self_parameter
+          parameter: (self_parameter
             (lifetime
               (identifier))
             (mutable_specifier)
-            (self)))
+            pattern: (self)))
         body: (block))))
   (impl_item
     type: (generic_type
@@ -952,7 +952,7 @@ impl ConvertTo<i64> for i32 {
     body: (declaration_list
       (function_item
         name: (identifier)
-        parameters: (parameters (self_parameter (self)))
+        parameters: (parameters parameter: (self_parameter pattern: (self)))
         return_type: (primitive_type)
         body: (block
           (type_cast_expression
@@ -1205,8 +1205,8 @@ impl<A> Default for B<A> where *mut A: C + D {}
     name: (identifier)
     type_parameters: (type_parameters (type_identifier))
     parameters: (parameters
-      (self_parameter (self))
-      (parameter
+      parameter: (self_parameter pattern: (self))
+      parameter: (parameter
         pattern: (identifier)
         type: (reference_type
           (mutable_specifier)
@@ -1218,7 +1218,7 @@ impl<A> Default for B<A> where *mut A: C + D {}
         bounds: (trait_bounds
           (function_type
             trait: (type_identifier)
-            parameters: (parameters (reference_type type: (type_identifier)))
+            parameters: (parameters parameter: (reference_type type: (type_identifier)))
             return_type: (primitive_type)))))
     body: (block (return_expression (boolean_literal))))
 

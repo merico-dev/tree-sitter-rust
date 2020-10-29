@@ -67,7 +67,7 @@ match x {
         (struct_pattern
           (type_identifier)
           (field_pattern (field_identifier) (identifier))
-          (field_pattern (field_identifier))))
+          (field_pattern (field_identifier) (wildcard))))
       (tuple_expression (string_literal) (identifier))))))
 
 =================================
@@ -124,7 +124,7 @@ match x {
             (captured_pattern
               (identifier)
               (tuple_struct_pattern
-                type: (identifier)))
+                type: (identifier) (wildcard)))
             (captured_pattern
               (identifier)
               (tuple_struct_pattern
@@ -211,7 +211,7 @@ fn foo((1 | 2 | 3): u8) {}
     consequence: (block
       (call_expression
         function: (identifier)
-        arguments: (arguments
+        arguments: (arguments argument:
           (identifier)))))
   (while_let_expression
     pattern: (or_pattern
@@ -225,7 +225,7 @@ fn foo((1 | 2 | 3): u8) {}
     body: (block
       (call_expression
         function: (identifier)
-        arguments: (arguments
+        arguments: (arguments argument:
           (identifier)))))
   (let_declaration
     pattern: (or_pattern
@@ -239,7 +239,7 @@ fn foo((1 | 2 | 3): u8) {}
       function: (field_expression
         value: (identifier)
         field: (field_identifier))
-      arguments: (arguments
+      arguments: (arguments argument:
         (reference_expression
           value: (identifier)))))
   (for_expression
@@ -259,7 +259,7 @@ fn foo((1 | 2 | 3): u8) {}
         (identifier)))
     value: (call_expression
       function: (identifier)
-      arguments: (arguments
+      arguments: (arguments argument:
         (identifier))))
   (for_expression
     pattern: (or_pattern
@@ -297,7 +297,7 @@ fn foo((1 | 2 | 3): u8) {}
   (function_item
     name: (identifier)
     parameters: (parameters
-      (parameter
+      parameter: (parameter
         pattern: (tuple_pattern
           (or_pattern
             (or_pattern
